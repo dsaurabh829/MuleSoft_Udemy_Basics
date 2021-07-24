@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="f4b676ff-d674-49b7-bb3f-5558923e504f" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="1.project_zeroFlow" doc:id="640fc98a-fc59-41c8-aed3-021c77134a26" >
+		<http:listener doc:name="Listener" doc:id="606b04b7-bc9c-46ba-aae5-f6fb08f76f20" config-ref="HTTP_Listener_config" path="/project_zero" allowedMethods="GET">
+		</http:listener>
+		<logger level="INFO" doc:name="Logger" doc:id="25b3d072-dd4e-48df-b67a-9a2cd637215a" message="LOGGER Active"/>
+		<set-payload value="Message from Payload" doc:name="Set Payload" doc:id="b0a3d8be-d42b-482e-961b-ee2d69df5ac5" />
+	</flow>
+</mule>
