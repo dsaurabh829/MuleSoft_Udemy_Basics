@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="uriparam" doc:id="c6ed37bc-fc2d-419f-af70-a64adc716a53" >
+		<http:listener doc:name="URI Params" doc:id="7d5dd9f8-d92b-45a2-99b9-0a2fd2c9cd04" config-ref="HTTP_Listener_config" path="/uriparams/{ID}" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Log Active" doc:id="88477edd-413f-496b-9621-84c3d3e78f09" message='#["Log Active " ++ flow.name]' />
+		<set-payload value='#[attributes.uriParams."ID" + "Message from Payload"]' doc:name="Set Payload" doc:id="8999c4fa-52ae-4798-b734-395e4c44372e" />
+	</flow>
+	<flow name="Basic" doc:id="bc00ec47-ae6a-4d8b-91be-2efad11a32b1" >
+		<http:listener doc:name="Http Get " doc:id="9a77e1f3-b2db-41db-b072-4a6e639f3b8f" config-ref="HTTP_Listener_config" path="/basics/*" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="df7b79e3-9eac-44b5-ad2f-416407b1c4ad" message='#["Log Active: " ++ flow.name]'/>
+		<set-payload value='#["this is basic http flow"]' doc:name="Set Payload" doc:id="0105a3a5-fa52-430f-9887-d97897794d04" />
+	</flow>
+</mule>
