@@ -1,5 +1,151 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd"></mule>
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="3.dataweaveFlow-basics" doc:id="cbcb6135-ea33-4730-8c75-d0c0c3ea9996" >
+		<ee:transform doc:name="Transform Message" doc:id="1b349f4f-2e2e-4bcb-8b13-196d7d0678f3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+output application/json
+---
+{
+	"string": ("Hello "++"World")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="8e5ca0ff-278a-4a02-bc93-f3aad3731005" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+output application/xml
+---
+{
+	"string": ("Hello "++"World")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="a7371858-8ae9-48de-a9d7-2c6885a735ea" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var myvar = {
+	"string" : ("Hello")
+}
+output application/json
+---
+
+myvar]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform Message" doc:id="5231f5c7-c1ed-4c60-9d5f-91dcacd92a7c" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+
+var myfunc = {
+	"sum": sum([1,3,4,6,8]),
+	"divide": (10/2),
+	"timestamp": now()
+	
+}
+---
+myfunc]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="3.dataweaveFlow_readFile" doc:id="b15fb343-87cc-4455-9808-0a12bb4330dd" >
+		<ee:transform doc:name="Transform Message" doc:id="9d7d35c7-6e65-4374-b210-c2a96b4659aa" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+readUrl("classpath://humans.json")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Cretae Metadata type" doc:id="9a75ba57-8a61-4cd1-bb3e-c07b6e8b4c42" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	Human: {
+		Male: payload.Human.Male,
+		Female: payload.Human.Female
+	}
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Transform to XML" doc:id="f1924285-df48-4121-97b7-166796745ddf" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/xml
+---
+
+readUrl("classpath://humans.json")]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="3.dataweaveFlow" doc:id="596ff562-6aab-4fb7-9f4e-9ef47bdb369d" >
+		<ee:transform doc:name="Array to Object usign Map" doc:id="0171ad77-a094-454e-90df-8c652857157b" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var myarray = ["I", "AM", "Dixit"]
+
+output application/json
+---
+myarray map ((item, index) -> 
+index : item ++ "_" ++ index)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Object to Array using Pluck" doc:id="2de431d5-7c89-43df-b2bd-70217c4425a0" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = {
+	"0" : "I",
+	"1": "AM",
+	"2": "Mule"
+}
+output application/json
+---
+customObj pluck ((value) -> value)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Filtering on array" doc:id="b6ce9655-60b0-488f-b07a-43ad7de9648f" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var myarr = [1,2,3,4,5,6,7,8,9,1,2,34,21,44]
+output application/json
+---
+{
+"collection" : myarr filter ((item, index) ->
+	isEven(item)
+) 
+
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Filetering on objects" doc:id="ea6c9ebb-604b-4401-8a07-d778106da3a5" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+var customObj = {
+	"0" : "I",
+	"1": "AM",
+	"2": "Mule"
+}
+output application/json
+---
+{
+	"collection": customObj filterObject ((value, key, index) -> 
+		index>0 and sizeOf(value)>2
+	)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>
