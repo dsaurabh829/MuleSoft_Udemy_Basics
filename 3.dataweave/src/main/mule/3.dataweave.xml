@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns="http://www.mulesoft.org/schema/mule/core"
-	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
-http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
 	<flow name="3.dataweaveFlow-basics" doc:id="cbcb6135-ea33-4730-8c75-d0c0c3ea9996" >
 		<ee:transform doc:name="Transform Message" doc:id="1b349f4f-2e2e-4bcb-8b13-196d7d0678f3" >
 			<ee:message >
@@ -88,7 +89,7 @@ readUrl("classpath://humans.json")]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
 	</flow>
-	<flow name="3.dataweaveFlow" doc:id="596ff562-6aab-4fb7-9f4e-9ef47bdb369d" >
+	<flow name="3.dataweaveFlow_Converting_and_Filtering" doc:id="596ff562-6aab-4fb7-9f4e-9ef47bdb369d" >
 		<ee:transform doc:name="Array to Object usign Map" doc:id="0171ad77-a094-454e-90df-8c652857157b" >
 			<ee:message >
 				<ee:set-payload ><![CDATA[%dw 2.0
@@ -138,6 +139,9 @@ var customObj = {
 	"1": "AM",
 	"2": "Mule"
 }
+/*
+ *  comment 
+ */
 output application/json
 ---
 {
@@ -147,5 +151,45 @@ output application/json
 }]]></ee:set-payload>
 			</ee:message>
 		</ee:transform>
+	</flow>
+	<flow name="3.dataweaveFlow_String_Indexing" doc:id="d274f7ad-9b6d-4e69-9ea6-7429213a63f8" >
+		<ee:transform doc:name="Showing character in String by index" doc:id="145c6295-0543-4f88-8518-e96f1800209d" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var mystr = "Hello"
+output application/json
+---
+mystr[0]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Iterating String through a range" doc:id="2eb6fbb1-cc2f-4741-b074-6f4d8e3cb717" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var mystr = "Hello"
+output application/json
+---
+
+mystr[0 to 3]]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="3.dataweaveFlow_Lambda_basics" doc:id="f9ce29e7-efc8-4e9c-b931-e561a35e0b69" >
+		<http:listener doc:name="Listener" doc:id="f54af65e-8c44-47bc-b949-dc6d4f7275ef" path="/lambdas" allowedMethods="POST" config-ref="HTTP_Listener_config"/>
+		<logger level="INFO" doc:name="Logger_0" doc:id="581d4b38-615b-482a-ba5e-b2c0c04e0ac4" message="#[payload]"/>
+		<ee:transform doc:name="check and modify payload using function" doc:id="343f212e-0d29-4bc0-bd8c-9ead2bd49ed3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+fun createString(object) = {
+	description : object
+}
+output application/json
+---
+{
+	"root" : createString(payload)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="b68740b3-efdc-489b-a9a8-c17ce3d6b0a9" message='#[payload]'/>
 	</flow>
 </mule>

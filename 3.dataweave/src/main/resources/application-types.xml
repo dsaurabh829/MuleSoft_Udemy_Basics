@@ -23,6 +23,17 @@ type HumansDtaa = {|
 
 ]]></types:shape>
     </types:type>
+    <types:type name="InputLambdaPayloadTest" format="json">
+      <types:shape format="weave" example="LambdaTest.json"><![CDATA[%dw 2.0
+
+type InputLambdaPayloadTest = {|
+  f1: String, 
+  f2: String, 
+  f3: String
+|} {"example": "{\\\"f1\\\":\\\"val1\\\",\\\"f2\\\":\\\"val2\\\",\\\"f3\\\":\\\"val3\\\"}"}
+
+]]></types:shape>
+    </types:type>
   </types:catalog>
   <types:enrichment select="#f1924285-df48-4121-97b7-166796745ddf">
     <types:processor-declaration>
@@ -38,6 +49,15 @@ type HumansDtaa = {|
       <types:input-event>
         <types:message>
           <types:payload type="HumansDtaa"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#343f212e-0d29-4bc0-bd8c-9ead2bd49ed3">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="InputLambdaPayloadTest"/>
         </types:message>
       </types:input-event>
     </types:processor-declaration>
