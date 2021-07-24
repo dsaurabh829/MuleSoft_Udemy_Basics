@@ -1,0 +1,45 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="HumansDtaa" format="json">
+      <types:shape format="weave" example="humans.json"><![CDATA[%dw 2.0
+
+type HumansDtaa = {|
+  Human: {|
+    Male: {|
+      M1: {|
+        name: String, 
+        age: String
+      |}
+    |}, 
+    Female: {|
+      F1: {|
+        name: String, 
+        age: String
+      |}
+    |}
+  |}
+|} {"example": "{\\\"Human\\\":{\\\"Male\\\":{\\\"M1\\\":{\\\"name\\\":\\\"Saurabh\\\",\\\"age\\\":\\\"21\\\"}},\\\"Female\\\":{\\\"F1\\\":{\\\"name\\\":\\\"Satya\\\",\\\"age\\\":\\\"21\\\"}}}}"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#f1924285-df48-4121-97b7-166796745ddf">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="HumansDtaa"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+  <types:enrichment select="#9a75ba57-8a61-4cd1-bb3e-c07b6e8b4c42">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="HumansDtaa"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

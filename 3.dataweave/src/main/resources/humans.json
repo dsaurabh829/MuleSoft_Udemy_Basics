@@ -1,0 +1,16 @@
+ {
+  "Human":{
+	"Male" : {
+	"M1":{
+	"name":"Saurabh",
+	"age":"21"
+	}
+	},
+	"Female" : {
+	"F1" : {
+	"name": "Satya",
+	"age": "21"
+	}
+	}
+	}
+	}
