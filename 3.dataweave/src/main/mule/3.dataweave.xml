@@ -181,7 +181,7 @@ mystr[0 to 3]]]></ee:set-payload>
 				<ee:set-payload ><![CDATA[%dw 2.0
 
 fun createString(object) = {
-	description : object
+	"description" : object
 }
 output application/json
 ---
@@ -191,5 +191,129 @@ output application/json
 			</ee:message>
 		</ee:transform>
 		<logger level="INFO" doc:name="Logger" doc:id="b68740b3-efdc-489b-a9a8-c17ce3d6b0a9" message='#[payload]'/>
+		<ee:transform doc:name="Convert2Array" doc:id="5cccdfe1-e143-4a75-aeff-42d49ef4c3be" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+
+fun createString(object) = {
+	"description" : object
+}
+
+var cusomObj = payload
+output application/json
+---
+{
+	"array" : cusomObj pluck ((value) -> value)
+	
+}
+
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger_02" doc:id="5274d1ab-f50b-4f1d-be44-b501f522f9b6" message="#[payload]"/>
+	</flow>
+	<flow name="3.dataweaveFlow" doc:id="be638e2c-4a11-48bc-a2f6-3a57f0ffa168" >
+		<ee:transform doc:name="Merge 2 Arrays on the basis of Id's" doc:id="28961065-33c8-487e-b30c-10c3e6671ad3" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var books = [
+	{
+		bookid: 101,
+		title : "mule course",
+		price : 200
+	},
+	{
+		bookid: 102,
+		title : "mule fundamental",
+		price : 300
+	},
+	{
+		bookid : 103,
+		title : "mule concept",
+		price : 500
+		}
+
+	
+]
+
+var author = [
+	{
+		bookid : 101,
+		author : "Saurabh"
+	},
+	{
+		bookid : 102,
+		author : "Dixit"
+	},
+	{
+		bookid: 103,
+		"author" : "papa"
+	}
+]
+output application/json
+---
+{
+	"bookandauthor" : books map ((item, index) ->
+		using (id = item.bookid){
+			id : id,
+			"cost" : item.price,
+			"bookname": item.title,
+			
+			(author filter ($.bookid contains id) map (item) 
+				-> 
+				{
+					"publisher": item.author
+				}
+			)
+		}
+		
+	)
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="get the price of books on the basis of their price" doc:id="1ae212a0-d783-402b-bf31-3be17dffc57e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+var bookslist = [
+	book : {
+		bookid: 101,
+		title : "mule course",
+		price : 200
+	},
+	book : {
+		bookid: 102,
+		title : "mule fundamental",
+		price : 300
+	},
+	book : {
+		bookid : 103,
+		title : "mule concept",
+		price : 500
+		}
+
+	
+]
+
+var author = [
+	{
+		bookid : 101,
+		author : "Saurabh"
+	},
+	{
+		bookid : 102,
+		author : "Dixit"
+	},
+	{
+		bookid: 103,
+		"author" : "papa"
+	}
+]
+output application/json
+---
+
+"prices": bookslist.book.*price[?($>250)]
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
 	</flow>
 </mule>
