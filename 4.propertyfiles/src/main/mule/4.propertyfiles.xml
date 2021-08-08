@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd">
+	<flow name="4.propertyfilesFlow1" doc:id="df97b5af-54fa-456c-9c17-ffa4464cb660" >
+		<http:listener doc:name="HTTP GET" doc:id="21db8fe1-cd5d-41b4-a92b-10b3f151140a" config-ref="HTTP_Listener_config" path="${http.path}" allowedMethods="GET"/>
+		<logger level="INFO" doc:name="Logger" doc:id="71c2e0c2-503a-4e24-bb85-d87364ddff68" message='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;{&#10;	"message": Mule::p("message")&#10;}]'/>
+		<set-payload value='#[%dw 2.0&#10;&#10;output application/json&#10;---&#10;{&#10;	"message": Mule::p("message")&#10;}]' doc:name="Set Payload" doc:id="b7dfe4b0-886c-4f5d-be96-1fc07a21f76b" />
+	</flow>
+	<!--  
+	<flow name="4.propertyfilesFlow" doc:id="d37b27f3-13e4-4826-9ac2-eee0c9a5f886" >
+		<http:listener doc:name="HTTP Get" doc:id="526ac874-d1d6-4d20-a279-7ee548c7bfc2" config-ref="HTTP_Listener_config" path="${http.path}" allowedMethods="GET">
+			<non-repeatable-stream />
+		</http:listener>
+		<logger level="INFO" doc:name="Logger: started" doc:id="72335399-b45d-4ac0-9ece-9b03b56550d0" message="${message}"/>
+		<set-payload value='${message} ++ "sending response string"' doc:name="Set Payload" doc:id="23806ee3-3017-44eb-a003-9bce95e26d17" />
+	</flow>
+	-->
+</mule>
